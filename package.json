@@ -1,5 +1,5 @@
 {
-	"name": "@alessiofrittoli/react-componentsr",
+	"name": "@alessiofrittoli/react-components",
 	"version": "0.1.0",
 	"description": "Starter repository for developing node_modules",
 	"author": {
@@ -18,14 +18,14 @@
 		"react",
 		"react-components"
 	],
-	"homepage": "https://github.com/alessiofrittoli/react-componentsr#readme",
+	"homepage": "https://github.com/alessiofrittoli/react-components#readme",
 	"bugs": {
-		"url": "https://github.com/alessiofrittoli/react-componentsr/issues",
+		"url": "https://github.com/alessiofrittoli/react-components/issues",
 		"email": "info@alessiofrittoli.it"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/alessiofrittoli/react-componentsr.git"
+		"url": "git+https://github.com/alessiofrittoli/react-components.git"
 	},
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
@@ -90,6 +90,8 @@
 	},
 	"devDependencies": {
 		"@alessiofrittoli/node-scripts": "^2.5.0",
+		"@eslint/compat": "^1.2.9",
+		"@eslint/eslintrc": "^3.3.1",
 		"@eslint/js": "^9.26.0",
 		"@jest/globals": "^29.7.0",
 		"@testing-library/dom": "^10.4.0",
@@ -103,6 +105,8 @@
 		"concurrently": "^9.1.2",
 		"dotenv": "^16.5.0",
 		"eslint": "^9.26.0",
+		"eslint-plugin-react": "^7.37.5",
+		"eslint-plugin-react-hooks": "^5.2.0",
 		"eslint-plugin-react-server-components": "^1.2.0",
 		"globals": "^16.1.0",
 		"http-server": "^14.1.1",

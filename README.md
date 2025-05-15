@@ -1,23 +1,21 @@
-# Node Module Starter 🛠️
+# React Components 🧩
 
 [![NPM Latest Version][version-badge]][npm-url] [![Coverage Status][coverage-badge]][coverage-url] [![Socket Status][socket-badge]][socket-url] [![NPM Monthly Downloads][downloads-badge]][npm-url] [![Dependencies][deps-badge]][deps-url]
 
-[![GitHub Sponsor][sponsor-badge]][sponsor-url] [![GitHub Sponsor][sponsor-count-badge]][sponsor-count-url]
+[![GitHub Sponsor][sponsor-badge]][sponsor-url]
 
-[version-badge]: https://img.shields.io/npm/v/%40alessiofrittoli%2Fnode-module-starter
-[npm-url]: https://npmjs.org/package/%40alessiofrittoli%2Fnode-module-starter
-[coverage-badge]: https://coveralls.io/repos/github/alessiofrittoli/node-module-starter/badge.svg
-[coverage-url]: https://coveralls.io/github/alessiofrittoli/node-module-starter
-[socket-badge]: https://socket.dev/api/badge/npm/package/@alessiofrittoli/node-module-starter
-[socket-url]: https://socket.dev/npm/package/@alessiofrittoli/node-module-starter/overview
-[downloads-badge]: https://img.shields.io/npm/dm/%40alessiofrittoli%2Fnode-module-starter.svg
-[deps-badge]: https://img.shields.io/librariesio/release/npm/%40alessiofrittoli%2Fnode-module-starter
-[deps-url]: https://libraries.io/npm/%40alessiofrittoli%2Fnode-module-starter
+[version-badge]: https://img.shields.io/npm/v/%40alessiofrittoli%2Freact-components
+[npm-url]: https://npmjs.org/package/%40alessiofrittoli%2Freact-components
+[coverage-badge]: https://coveralls.io/repos/github/alessiofrittoli/react-components/badge.svg
+[coverage-url]: https://coveralls.io/github/alessiofrittoli/react-components
+[socket-badge]: https://socket.dev/api/badge/npm/package/@alessiofrittoli/react-components
+[socket-url]: https://socket.dev/npm/package/@alessiofrittoli/react-components/overview
+[downloads-badge]: https://img.shields.io/npm/dm/%40alessiofrittoli%2Freact-components.svg
+[deps-badge]: https://img.shields.io/librariesio/release/npm/%40alessiofrittoli%2Freact-components
+[deps-url]: https://libraries.io/npm/%40alessiofrittoli%2Freact-components
 
 [sponsor-badge]: https://img.shields.io/static/v1?label=Fund%20this%20package&message=%E2%9D%A4&logo=GitHub&color=%23DB61A2
 [sponsor-url]: https://github.com/sponsors/alessiofrittoli
-[sponsor-count-badge]: https://img.shields.io/github/sponsors/alessiofrittoli?label=Sponsor&logo=GitHub
-[sponsor-count-url]: https://github.com/sponsors/alessiofrittoli
 
 ## Starter repository for developing node_modules
 
@@ -37,10 +35,10 @@
 
 ### Getting started (delete once cloned in your project)
 
-Run the following command to start using `node-module-starter` for your projects:
+Run the following command to start using `react-components` for your projects:
 
 ```bash
-git clone git@github.com:alessiofrittoli/node-module-starter.git && git remote remove origin
+git clone git@github.com:alessiofrittoli/react-components.git && git remote remove origin
 ```
 
 install dependencies

@@ -22,6 +22,9 @@
 ### Table of Contents
 
 - [Getting started](#getting-started)
+- [API Reference](#api-reference)
+  - [High Order Components](#high-order-components)
+    - [`<Stack />`](#stack-)
 - [Development](#development)
   - [Install depenendencies](#install-depenendencies)
   - [Build the source code](#build-the-source-code)
@@ -33,37 +36,105 @@
 
 ---
 
-### Getting started (delete once cloned in your project)
+### Getting started
 
-Run the following command to start using `react-components` for your projects:
-
-```bash
-git clone git@github.com:alessiofrittoli/react-components.git && git remote remove origin
-```
-
-install dependencies
+Run the following command to start using `react-components` in your projects:
 
 ```bash
-pnpm i
-```
-
-Read the [Creating a repository from a template - GitHub Docs](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) for more in-detail informations about creating a new Repository from a template using GitHub web interface.
-
----
-
-### Getting started (customize based on your project needs)
-
-Run the following command to start using `{package_name}` in your projects:
-
-```bash
-npm i {package_name}
+npm i @alessiofrittoli/react-components
 ```
 
 or using `pnpm`
 
 ```bash
-pnpm i {package_name}
+pnpm i @alessiofrittoli/react-components
 ```
+
+---
+
+### API Reference
+
+#### Components
+
+##### High Order Components
+
+###### `<Stack />`
+
+Easily stack components avoiding creating a big Component stack pyramid.
+
+<details>
+
+<summary style="cursor:pointer">Component Props</summary>
+
+| Property     | Type | Description |
+|--------------|------|-------------|
+| `components` | `StackComponent[]` | An Array of Components or Component and props. The Component must accept and return children. |
+| `children`   | `React.ReactNode`  | (Optional) The Component children. |
+
+</details>
+
+---
+
+<details>
+
+<summary style="cursor:pointer">Usage</summary>
+
+###### Basic usage
+
+```tsx
+import { Stack } from '@alessiofrittoli/react-components'
+
+export const ProviderExample: React.FC<React.PropsWithChildren> = ( { children } ) => {
+  // ...
+  return (
+    <div>{ children }</div>
+  )
+}
+
+export const AppProviders: React.FC<React.PropsWithChildren> = ( { children } ) => (
+  <Stack components={ [
+    ProviderExample,
+    AppProvider1,
+    AppProvider2,
+    AppProvider3,
+    // ...
+  ] }>{ children }</Stack>
+)
+```
+
+---
+
+###### Component with props
+
+Use `StackComponent<typeof ComponentReference>` to add type safety to the passed props.
+
+```tsx
+import { Stack, type StackComponent } from '@alessiofrittoli/react-components'
+
+type ProviderExampleProps = React.PropsWithChildren<{
+  /** Example required prop */
+  className: string
+}>
+
+
+export const ProviderExample: React.FC<React.PropsWithChildren> = (
+  { className, children }
+) => (
+  <div className={ className }>{ children }</div>
+)
+
+export const AppProviders: React.FC<React.PropsWithChildren> = ( { children } ) => (
+  <Stack components={ [
+    [ ProviderExample, { className: 'some-class-name' } ] as StackComponent<typeof ProviderExample>,
+    AppProvider1,
+    AppProvider2,
+    AppProvider3,
+    // ...
+  ] }>{ children }</Stack>
+)
+```
+
+</details>
 
 ---
 

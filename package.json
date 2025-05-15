@@ -1,5 +1,5 @@
 {
-	"name": "@alessiofrittoli/react-componentsr",
+	"name": "@alessiofrittoli/react-components",
 	"version": "0.1.0",
 	"description": "Starter repository for developing node_modules",
 	"author": {
@@ -18,14 +18,14 @@
 		"react",
 		"react-components"
 	],
-	"homepage": "https://github.com/alessiofrittoli/react-componentsr#readme",
+	"homepage": "https://github.com/alessiofrittoli/react-components#readme",
 	"bugs": {
-		"url": "https://github.com/alessiofrittoli/react-componentsr/issues",
+		"url": "https://github.com/alessiofrittoli/react-components/issues",
 		"email": "info@alessiofrittoli.it"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/alessiofrittoli/react-componentsr.git"
+		"url": "git+https://github.com/alessiofrittoli/react-components.git"
 	},
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",

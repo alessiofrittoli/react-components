@@ -1,7 +1,7 @@
 {
 	"name": "@alessiofrittoli/react-components",
 	"version": "0.1.0",
-	"description": "Starter repository for developing node_modules",
+	"description": "TypeScript React Components",
 	"author": {
 		"name": "Alessio Frittoli",
 		"email": "info@alessiofrittoli.it",

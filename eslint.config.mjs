@@ -5,6 +5,7 @@ import pluginJs from '@eslint/js'
 import tseslint from 'typescript-eslint'
 import { FlatCompat } from '@eslint/eslintrc'
 import { fixupConfigRules } from '@eslint/compat'
+import { config as AFReactHooksEslint } from '@alessiofrittoli/react-hooks/eslint'
 
 const __filename	= fileURLToPath( import.meta.url )
 const __dirname		= dirname( __filename )
@@ -34,6 +35,7 @@ const config = [
 			},
 		},
 	},
+	...AFReactHooksEslint.recommended,
 	{ files: [ 'src/**/*.{js,jsx,mjs,cjs,ts,tsx}' ] },
 	{ ignores: [ 'dist', 'scripts', 'coverage' ] },
 	{ rules: {

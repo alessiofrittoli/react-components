@@ -64,6 +64,8 @@ pnpm i @alessiofrittoli/react-components
 
 A React higher-order component that renders its children based on their visibility within the viewport.
 
+This Component uses [`useInView`](https://npmjs.com/package/@alessiofrittoli/react-hooks#useinview) hook under-the-hood so it may worth to take a look at the useInView [`API Reference`](https://npmjs.com/package/@alessiofrittoli/react-hooks#useinview) for a deep understanding on how it actually works.
+
 <details>
 
 <summary style="cursor:pointer">Component Props</summary>
@@ -153,7 +155,7 @@ const Component: React.FC = () => (
 
 Alternatively you can set the `mountInView` prop to `false`, which prevents the mount/unmount life-cycle, and then pass a callable function as `children`.
 
-By passing a callable function as `children` you'll earn access to the `useInView` result data.
+By passing a callable function as `children` you'll earn access to the [`useInView`](https://npmjs.com/package/@alessiofrittoli/react-hooks#useinview) result data.
 
 ```tsx
 const Component: React.FC = () => (

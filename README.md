@@ -24,6 +24,7 @@
 - [Getting started](#getting-started)
 - [API Reference](#api-reference)
   - [High Order Components](#high-order-components)
+    - [`<InView />`](#inview-)
     - [`<Stack />`](#stack-)
     - [`WithGenerator`](#withgenerator)
 - [Development](#development)
@@ -58,6 +59,118 @@ pnpm i @alessiofrittoli/react-components
 #### Components
 
 ##### High Order Components
+
+###### `<InView />`
+
+A React higher-order component that renders its children based on their visibility within the viewport.
+
+<details>
+
+<summary style="cursor:pointer">Component Props</summary>
+
+| Property      | Type      | Default | Description |
+|---------------|-----------|---------|-------------|
+| `mountInView` | `boolean` | `true`  | Indicates whether to mount/unmount children when in view. |
+| `children`    | `FunctionChildren<[ result: UseInViewReturnType ]>` | - | A React.ReactNode or a callable function that returns a React.ReactNode. |
+| `root`        | `Element\|Document\|false\|null` | - | (Optional) Identifies the `Element` or `Document` whose bounds are treated as the bounding box of the viewport for the Element which is the observer's target. |
+| `margin` | `MarginType` | - | (Optional) A string, formatted similarly to the CSS margin property's value, which contains offsets for one or more sides of the root's bounding box. |
+| `amount` | `'all'\|'some'\|number\|number[]` | - | (Optional) The intersecting target thresholds. |
+| | | | Threshold can be set to: |
+| | | | - `all` - `1` will be used. |
+| | | | - `some` - `0.5` will be used. |
+| | | | - `number` |
+| | | | - `number[]` |
+| `once` | `boolean` | - | (Optional) By setting this to `true` the observer will be disconnected after the target Element enters the viewport. |
+| `initial` | `boolean` | - | (Optional) Initial value. This value is used while server rendering then will be updated in the client based on target visibility. Default: `false`. |
+| `enable` | `boolean` | - | (Optional) Defines the initial observation activity. Use the returned `setEnabled` to update this state. Default: `true`. |
+| `onIntersect` | `OnIntersectStateHandler` | - | (Optional) A custom callback executed when target element's visibility has crossed one or more thresholds. |
+| | | | This callback is awaited before any state update. |
+| | | | If an error is thrown the React State update won't be fired. |
+| | | | ⚠️ Wrap your callback with `useCallback` to avoid unnecessary `IntersectionObserver` recreation. |
+| `onEnter` | `OnIntersectHandler` | - | (Optional) A custom callback executed when target element's visibility has crossed one or more thresholds. |
+| | | | This callback is awaited before any state update. |
+| | | | If an error is thrown the React State update won't be fired. |
+| | | | ⚠️ Wrap your callback with `useCallback` to avoid unnecessary `IntersectionObserver` recreation. |
+| `onExit` | `OnIntersectHandler` | - | (Optional) A custom callback executed when target element's visibility has crossed one or more thresholds. |
+| | | | This callback is awaited before any state update. |
+| | | | If an error is thrown the React State update won't be fired. |
+| | | | ⚠️ Wrap your callback with `useCallback` to avoid unnecessary `IntersectionObserver` recreation. |
+
+</details>
+
+---
+
+<details>
+
+<summary style="cursor:pointer">Usage</summary>
+
+###### Basic usage
+
+```tsx
+'use client'
+
+// ClientComponent.tsx
+const ClientComponent: React.FC = () => {
+
+  useEffect( () => {
+    console.log( 'ClientComponent entered viewport.' )
+    return () => {
+      console.log( 'ClientComponent exited viewport.' )
+    }
+  }, [] )
+
+  return (
+    <div>ClientComponent</div>
+  )
+
+}
+
+// ServerComponent.tsx
+const ServerComponent: React.FC = () => (
+  <InView>
+    <ClientComponent />
+  </InView>
+)
+```
+
+---
+
+###### Server-Render initial value
+
+By default `<InView />` mounts/unmounts its children based on intersection within the viewport.
+If your component renders important SEO informations, mounting/unmounting yout component only when is in the viewport may not the best option since
+the rendered content won't be part of the server-rendered web page.
+
+To ensure your content is delivered in the server-rendered web page, you may want to set the `initial` prop to `true`.
+
+```tsx
+const Component: React.FC = () => (
+  <InView initial>
+    <h1>I&apos;ll be in the source page!</h1>
+  </InView>
+)
+```
+
+Alternatively you can set the `mountInView` prop to `false`, which prevents the mount/unmount life-cycle, and then pass a callable function as `children`.
+
+By passing a callable function as `children` you'll earn access to the `useInView` result data.
+
+```tsx
+const Component: React.FC = () => (
+  <InView mountInView={ false }>
+    { ( { inView, enabled, isExiting, setEnabled, setInView, observer } ) => (
+      <h1 style={ {
+        opacity     : inView ? 1 : 0,
+        transition  : 'opacity 1s ease',
+      } }>I&apos;ll be in the source page!</h1>
+    ) }
+  </InView>
+)
+```
+
+</details>
+
+---
 
 ###### `<Stack />`
 

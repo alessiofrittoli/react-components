@@ -94,4 +94,27 @@ describe( 'InView', () => {
 
 	} )
 
+
+	it( 'accepts HTMLDivElement props and pass them to the IntersectionObserver target', () => {
+
+		const result: UseInViewReturn = { inView: true, isExiting: false }
+		
+		useInView.mockReturnValue( result )
+
+		const children = jest.fn( () => <span className='size-full'>Child</span> )
+		
+		render(
+			<InView
+				className='size-28'
+				data-testid='intersection-observer-target'
+			>{ children }</InView>
+		)
+
+		const element = screen.queryByTestId( 'intersection-observer-target' )
+		
+		expect( element ).toBeInTheDocument()
+		expect( element?.classList.contains( 'size-28' ) ).toBe( true )
+
+	} )
+
 } )

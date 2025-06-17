@@ -89,14 +89,15 @@ This Component uses [`useInView`](https://npmjs.com/package/@alessiofrittoli/rea
 | | | | This callback is awaited before any state update. |
 | | | | If an error is thrown the React State update won't be fired. |
 | | | | ⚠️ Wrap your callback with `useCallback` to avoid unnecessary `IntersectionObserver` recreation. |
-| `onEnter` | `OnIntersectHandler` | - | (Optional) A custom callback executed when target element's visibility has crossed one or more thresholds. |
+| `onEnter` | `OnIntersectHandler` | - | (Optional) A custom callback executed when target element is entering the viewport. |
 | | | | This callback is awaited before any state update. |
 | | | | If an error is thrown the React State update won't be fired. |
 | | | | ⚠️ Wrap your callback with `useCallback` to avoid unnecessary `IntersectionObserver` recreation. |
-| `onExit` | `OnIntersectHandler` | - | (Optional) A custom callback executed when target element's visibility has crossed one or more thresholds. |
+| `onExit` | `OnIntersectHandler` | - | (Optional) A custom callback executed when target element is exiting the viewport. |
 | | | | This callback is awaited before any state update. |
 | | | | If an error is thrown the React State update won't be fired. |
 | | | | ⚠️ Wrap your callback with `useCallback` to avoid unnecessary `IntersectionObserver` recreation. |
+| `...` | `React.ComponentProps<'div'>` | - | (Optional) Props added to the internal observed HTMLDivElement. |
 
 </details>
 

@@ -5,7 +5,7 @@ import { useInView, type UseInViewOptions, type UseInViewReturnType } from '@ale
 import { childrenFn, type FunctionChildren } from '@alessiofrittoli/react-api'
 
 
-export interface InViewProps extends UseInViewOptions
+export interface InViewProps extends UseInViewOptions, Omit<React.ComponentProps<'div'>, 'children'>
 {
 	/**
 	 * Indicates whether to mount/unmount children when in view.
@@ -37,15 +37,16 @@ export interface InViewProps extends UseInViewOptions
  * ```
  */
 export const InView: React.FC<InViewProps> = ( {
-	mountInView = true, children, ...props
+	mountInView = true, root, margin, amount,
+	once, initial, enable, onIntersect, onEnter, onExit, children, ...props
 } ) => {
 
 	const ref			= useRef<HTMLDivElement>( null )
-	const result		= useInView( ref, props )
+	const result		= useInView( ref, { root, margin, amount, once, initial, enable, onIntersect, onEnter, onExit } )
 	const { inView }	= result
 
 	return (
-		<div ref={ ref }>
+		<div ref={ ref } { ...props }>
 			{ mountInView ? (
 				inView ? childrenFn( children, result ) : null
 			) : (

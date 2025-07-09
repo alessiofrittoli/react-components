@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
-import { InView } from '@/client'
 import { useInView as _useInView, type UseInViewReturnType } from '@alessiofrittoli/react-hooks'
+import { InView } from '@/client'
 
 
 jest.mock( '@alessiofrittoli/react-hooks', () => ( {

@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
-import { Portal } from '@/client'
+import { Portal } from '@/HOC/Portal'
 
 
 describe( 'Portal', () => {

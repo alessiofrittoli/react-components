@@ -141,7 +141,7 @@ const ServerComponent: React.FC = () => (
 ###### Server-Render initial value
 
 By default `<InView />` mounts/unmounts its children based on intersection within the viewport.
-If your component renders important SEO informations, mounting/unmounting yout component only when is in the viewport may not the best option since
+If your component renders important SEO informations, mounting/unmounting your component only when is in the viewport may not the best option since
 the rendered content won't be part of the server-rendered web page.
 
 To ensure your content is delivered in the server-rendered web page, you may want to set the `initial` prop to `true`.

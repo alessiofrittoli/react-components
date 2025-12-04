@@ -31,9 +31,7 @@ export * from './GeneratorComponent'
  */
 export const WithGenerator = <
 	T = unknown
->(
-	fn: ( props: T ) => Generator
-) => {
+>( fn: ( props: T ) => Generator ) => {
 
 	const WithGeneratorComponent: React.FC<T> = (
 		props => (

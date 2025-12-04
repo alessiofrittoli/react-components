@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 type PortalProps = React.PropsWithChildren<{
-	/** A valid CSS selector string. */
+	/** A valid CSS selector string targeting a DOM element where `children` will be injected into. */
 	selector: string
 }>
 

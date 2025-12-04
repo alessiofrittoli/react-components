@@ -24,6 +24,7 @@
 - [API Reference](#api-reference)
   - [High Order Components](#high-order-components)
     - [`<InView />`](#inview-)
+    - [`<Portal />`](#portal-)
     - [`<Stack />`](#stack-)
     - [`WithGenerator`](#withgenerator)
 - [Development](#development)
@@ -180,6 +181,41 @@ const Component: React.FC = () => (
       </h1>
     )}
   </InView>
+);
+```
+
+</details>
+
+---
+
+###### `<Portal />`
+
+The Portal React Component allows you to easly leverage the `createPortal` API exported by React.
+
+<details>
+
+<summary style="cursor:pointer">Component Props</summary>
+
+| Property   | Type              | Description                                                                                 |
+| ---------- | ----------------- | ------------------------------------------------------------------------------------------- |
+| `selector` | `string`          | A valid CSS selector string targeting a DOM element where `children` will be injected into. |
+| `children` | `React.ReactNode` | (Optional) The Component children rendered inside the queried DOM element if found.         |
+
+</details>
+
+---
+
+<details>
+
+<summary style="cursor:pointer">Usage</summary>
+
+```tsx
+import { Portal } from "@alessiofrittoli/react-components";
+// or
+import { Portal } from "@alessiofrittoli/react-components/HOC/Portal";
+
+export const MyComponent: React.FC<> = () => (
+  <Portal selector="#target">Content inside target DOM element.</Portal>
 );
 ```
 

@@ -1,40 +1,63 @@
-# React Components 🧩
+<h1 align="center">React Components 🧩</h1>
+<p align="center">
+  TypeScript React Components
+</p>
+<p align="center">
+  <a href="https://npmjs.org/package/@alessiofrittoli/react-components">
+    <img src="https://img.shields.io/npm/v/@alessiofrittoli/react-components" alt="Latest version"/>
+  </a>
+  <a href="https://coveralls.io/github/alessiofrittoli/react-components">
+    <img src="https://coveralls.io/repos/github/alessiofrittoli/react-components/badge.svg" alt="Test coverage"/>
+  </a>
+  <a href="https://socket.dev/npm/package/@alessiofrittoli/react-components/overview">
+    <img src="https://socket.dev/api/badge/npm/package/@alessiofrittoli/react-components" alt="Socket Security score"/>
+  </a>
+  <a href="https://npmjs.org/package/@alessiofrittoli/react-components">
+    <img src="https://img.shields.io/npm/dm/@alessiofrittoli/react-components.svg" alt="npm downloads"/>
+  </a>
+  <a href="https://bundlephobia.com/package/@alessiofrittoli/react-components">
+    <img src="https://badgen.net/bundlephobia/dependency-count/@alessiofrittoli/react-components" alt="Dependencies"/>
+  </a>
+  <a href="https://libraries.io/npm/%40alessiofrittoli%2Freact-components">
+    <img src="https://img.shields.io/librariesio/release/npm/@alessiofrittoli/react-components" alt="Dependencies status"/>
+  </a>
+</p>
+<p align="center">
+  <a href="https://bundlephobia.com/package/@alessiofrittoli/react-components">
+    <img src="https://badgen.net/bundlephobia/min/@alessiofrittoli/react-components" alt="minified"/>
+  </a>
+  <a href="https://bundlephobia.com/package/@alessiofrittoli/react-components">
+    <img src="https://badgen.net/bundlephobia/minzip/@alessiofrittoli/react-components" alt="minizipped"/>
+  </a>
+  <a href="https://bundlephobia.com/package/@alessiofrittoli/react-components">
+    <img src="https://badgen.net/bundlephobia/tree-shaking/@alessiofrittoli/react-components" alt="Tree shakable"/>
+  </a>
+</p>
+<p align="center">
+  <a href="https://github.com/sponsors/alessiofrittoli">
+    <img src="https://img.shields.io/static/v1?label=Fund%20this%20package&message=%E2%9D%A4&logo=GitHub&color=%23DB61A2" alt="Fund this package"/>
+  </a>
+</p>
 
-[![NPM Latest Version][version-badge]][npm-url] [![Coverage Status][coverage-badge]][coverage-url] [![Socket Status][socket-badge]][socket-url] [![NPM Monthly Downloads][downloads-badge]][npm-url] [![Dependencies][deps-badge]][deps-url]
-
-[![GitHub Sponsor][sponsor-badge]][sponsor-url]
-
-[version-badge]: https://img.shields.io/npm/v/%40alessiofrittoli%2Freact-components
-[npm-url]: https://npmjs.org/package/%40alessiofrittoli%2Freact-components
-[coverage-badge]: https://coveralls.io/repos/github/alessiofrittoli/react-components/badge.svg
-[coverage-url]: https://coveralls.io/github/alessiofrittoli/react-components
-[socket-badge]: https://socket.dev/api/badge/npm/package/@alessiofrittoli/react-components
-[socket-url]: https://socket.dev/npm/package/@alessiofrittoli/react-components/overview
-[downloads-badge]: https://img.shields.io/npm/dm/%40alessiofrittoli%2Freact-components.svg
-[deps-badge]: https://img.shields.io/librariesio/release/npm/%40alessiofrittoli%2Freact-components
-[deps-url]: https://libraries.io/npm/%40alessiofrittoli%2Freact-components
 [sponsor-badge]: https://img.shields.io/static/v1?label=Fund%20this%20package&message=%E2%9D%A4&logo=GitHub&color=%23DB61A2
 [sponsor-url]: https://github.com/sponsors/alessiofrittoli
-
-## TypeScript React Components
 
 ### Table of Contents
 
 - [Getting started](#getting-started)
+- [Development](#development)
+  - [Local development](#local-development)
+  - [Production build](#production-build)
+  - [Unit tests](#unit-tests)
+    - [Run tests with coverage](#run-tests-with-coverage)
+  - [Contributing](#contributing)
+  - [Security](#security)
 - [API Reference](#api-reference)
   - [High Order Components](#high-order-components)
     - [`<InView />`](#inview-)
     - [`<Portal />`](#portal-)
     - [`<Stack />`](#stack-)
     - [`WithGenerator`](#withgenerator)
-- [Development](#development)
-  - [Install depenendencies](#install-depenendencies)
-  - [Build the source code](#build-the-source-code)
-  - [ESLint](#eslint)
-  - [Jest](#jest)
-- [Contributing](#contributing)
-- [Security](#security)
-- [Credits](#made-with-)
 
 ---
 
@@ -51,6 +74,84 @@ or using `pnpm`
 ```bash
 pnpm i @alessiofrittoli/react-components
 ```
+
+---
+
+### Development
+
+Run the following to start development
+
+```shell
+nvm use
+
+pnpm i
+```
+
+#### Local development
+
+Run the following
+
+```shell
+pnpm dev
+```
+
+This will generate unminified output code, sourcemaps and will enable source file watcher.
+
+---
+
+#### Production build
+
+Run the following to create a local production build
+
+```shell
+pnpm build
+```
+
+This will generate minified output code without sourcemaps.
+
+---
+
+#### Unit tests
+
+Run all the defined test suites by running the following:
+
+```shell
+# Run tests and watch file changes.
+pnpm test:watch
+
+# Run tests in a CI environment.
+pnpm test:ci
+```
+
+---
+
+##### Run tests with coverage
+
+An HTTP server is then started to serve coverage files from `./coverage` folder.
+
+⚠️ You may see a blank page the first time you run this command. Simply refresh the browser to see the updates.
+
+```shell
+pnpm test:coverage:serve
+```
+
+---
+
+#### Contributing
+
+Contributions are truly welcome!
+
+Please refer to the [Contributing Doc](./CONTRIBUTING.md) for more information on how to start contributing to this project.
+
+Help keep this project up to date with [GitHub Sponsor][sponsor-url].
+
+[![GitHub Sponsor][sponsor-badge]][sponsor-url]
+
+---
+
+#### Security
+
+If you believe you have found a security vulnerability, we encourage you to **_responsibly disclose this and NOT open a public issue_**. We will investigate all legitimate reports. Email `security@alessiofrittoli.it` to disclose any security vulnerabilities.
 
 ---
 
@@ -110,31 +211,29 @@ This Component uses [`useInView`](https://npmjs.com/package/@alessiofrittoli/rea
 ###### Basic usage
 
 ```tsx
-"use client";
+'use client'
 
 // ClientComponent.tsx
 const ClientComponent: React.FC = () => {
   useEffect(() => {
-    console.log("ClientComponent entered viewport.");
+    console.log('ClientComponent entered viewport.')
     return () => {
-      console.log("ClientComponent exited viewport.");
-    };
-  }, []);
+      console.log('ClientComponent exited viewport.')
+    }
+  }, [])
 
-  return <div>ClientComponent</div>;
-};
+  return <div>ClientComponent</div>
+}
 
 // ServerComponent.tsx
 
-import { InView } from "@alessiofrittoli/react-components/client";
-// or
-import { InView } from "@alessiofrittoli/react-components/HOC/InView";
+import { InView } from '@alessiofrittoli/react-components/client'
 
 const ServerComponent: React.FC = () => (
   <InView>
     <ClientComponent />
   </InView>
-);
+)
 ```
 
 ---
@@ -148,15 +247,13 @@ the rendered content won't be part of the server-rendered web page.
 To ensure your content is delivered in the server-rendered web page, you may want to set the `initial` prop to `true`.
 
 ```tsx
-import { InView } from "@alessiofrittoli/react-components/client";
-// or
-import { InView } from "@alessiofrittoli/react-components/HOC/InView";
+import { InView } from '@alessiofrittoli/react-components/client'
 
 const Component: React.FC = () => (
   <InView initial>
     <h1>I&apos;ll be in the source page!</h1>
   </InView>
-);
+)
 ```
 
 Alternatively you can set the `mountInView` prop to `false`, which prevents the mount/unmount life-cycle, and then pass a callable function as `children`.
@@ -164,9 +261,7 @@ Alternatively you can set the `mountInView` prop to `false`, which prevents the 
 By passing a callable function as `children` you'll earn access to the [`useInView`](https://npmjs.com/package/@alessiofrittoli/react-hooks#useinview) result data.
 
 ```tsx
-import { InView } from "@alessiofrittoli/react-components/client";
-// or
-import { InView } from "@alessiofrittoli/react-components/HOC/InView";
+import { InView } from '@alessiofrittoli/react-components/client'
 
 const Component: React.FC = () => (
   <InView mountInView={false}>
@@ -174,14 +269,14 @@ const Component: React.FC = () => (
       <h1
         style={{
           opacity: inView ? 1 : 0,
-          transition: "opacity 1s ease",
+          transition: 'opacity 1s ease',
         }}
       >
         I&apos;ll be in the source page!
       </h1>
     )}
   </InView>
-);
+)
 ```
 
 </details>
@@ -210,9 +305,7 @@ The Portal React Component allows you to easly leverage the `createPortal` API e
 <summary style="cursor:pointer">Usage</summary>
 
 ```tsx
-import { Portal } from "@alessiofrittoli/react-components";
-// or
-import { Portal } from "@alessiofrittoli/react-components/HOC/Portal";
+import { Portal } from "@alessiofrittoli/react-components/client";
 
 export const MyComponent: React.FC<> = () => (
   <Portal selector="#target">Content inside target DOM element.</Portal>
@@ -247,20 +340,14 @@ Easily stack components avoiding creating a big Component stack pyramid.
 ###### Basic usage
 
 ```tsx
-import { Stack } from "@alessiofrittoli/react-components";
-// or
-import { Stack } from "@alessiofrittoli/react-components/HOC/Stack";
+import { Stack } from '@alessiofrittoli/react-components'
 
-export const ProviderExample: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
+export const ProviderExample: React.FC<React.PropsWithChildren> = ({ children }) => {
   // ...
-  return <div>{children}</div>;
-};
+  return <div>{children}</div>
+}
 
-export const AppProviders: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => (
+export const AppProviders: React.FC<React.PropsWithChildren> = ({ children }) => (
   <Stack
     components={[
       ProviderExample,
@@ -272,7 +359,7 @@ export const AppProviders: React.FC<React.PropsWithChildren> = ({
   >
     {children}
   </Stack>
-);
+)
 ```
 
 ---
@@ -282,31 +369,21 @@ export const AppProviders: React.FC<React.PropsWithChildren> = ({
 Use `StackComponent<typeof ComponentReference>` to add type safety to the passed props.
 
 ```tsx
-import { Stack, type StackComponent } from "@alessiofrittoli/react-components";
-// or
-import {
-  Stack,
-  type StackComponent,
-} from "@alessiofrittoli/react-components/HOC/Stack";
+import { Stack, type StackComponent } from '@alessiofrittoli/react-components'
 
 type ProviderExampleProps = React.PropsWithChildren<{
   /** Example required prop */
-  className: string;
-}>;
+  className: string
+}>
 
-export const ProviderExample: React.FC<React.PropsWithChildren> = ({
-  className,
-  children,
-}) => <div className={className}>{children}</div>;
+export const ProviderExample: React.FC<React.PropsWithChildren> = ({ className, children }) => (
+  <div className={className}>{children}</div>
+)
 
-export const AppProviders: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => (
+export const AppProviders: React.FC<React.PropsWithChildren> = ({ children }) => (
   <Stack
     components={[
-      [ProviderExample, { className: "some-class-name" }] as StackComponent<
-        typeof ProviderExample
-      >,
+      [ProviderExample, { className: 'some-class-name' }] as StackComponent<typeof ProviderExample>,
       AppProvider1,
       AppProvider2,
       AppProvider3,
@@ -315,7 +392,7 @@ export const AppProviders: React.FC<React.PropsWithChildren> = ({
   >
     {children}
   </Stack>
-);
+)
 ```
 
 </details>
@@ -357,118 +434,44 @@ Transform your generator function into a React.js Component.
 ###### Stream Content from a React Component
 
 ```tsx
-import { WithGenerator } from "@alessiofrittoli/react-components";
-// or
-import { WithGenerator } from "@alessiofrittoli/react-components/HOC/WithGenerator";
+import { WithGenerator } from '@alessiofrittoli/react-components'
 
 interface StepProps {
-  someProp: string;
+  someProp: string
 }
 
 export const Steps = WithGenerator<StepProps>(async function* ({ someProp }) {
-  let i = 0;
+  let i = 0
 
   yield (
     <h1>
       Step {++i} - {someProp}
     </h1>
-  );
+  )
 
   // simulate an async task by awaiting a void Promise
-  await new Promise<void>((resolve) => setTimeout(resolve, 2000));
+  await new Promise<void>(resolve => setTimeout(resolve, 2000))
 
   yield (
     <h1>
       Step {++i} - {someProp}
     </h1>
-  );
+  )
 
   // simulate an async task by awaiting a void Promise
-  await new Promise<void>((resolve) => setTimeout(resolve, 2000));
+  await new Promise<void>(resolve => setTimeout(resolve, 2000))
 
   return (
     <h1>
       Step {++i} - {someProp} - Stream finished
     </h1>
-  );
-});
+  )
+})
 ```
 
 </details>
 
 ---
-
-### Development
-
-#### Install depenendencies
-
-```bash
-npm install
-```
-
-or using `pnpm`
-
-```bash
-pnpm i
-```
-
-#### Build the source code
-
-Run the following command to test and build code for distribution.
-
-```bash
-pnpm build
-```
-
-#### [ESLint](https://www.npmjs.com/package/eslint)
-
-warnings / errors check.
-
-```bash
-pnpm lint
-```
-
-#### [Jest](https://npmjs.com/package/jest)
-
-Run all the defined test suites by running the following:
-
-```bash
-# Run tests and watch file changes.
-pnpm test:watch
-
-# Run tests in a CI environment.
-pnpm test:ci
-```
-
-- See [`package.json`](./package.json) file scripts for more info.
-
-Run tests with coverage.
-
-An HTTP server is then started to serve coverage files from `./coverage` folder.
-
-⚠️ You may see a blank page the first time you run this command. Simply refresh the browser to see the updates.
-
-```bash
-test:coverage:serve
-```
-
----
-
-### Contributing
-
-Contributions are truly welcome!
-
-Please refer to the [Contributing Doc](./CONTRIBUTING.md) for more information on how to start contributing to this project.
-
-Help keep this project up to date with [GitHub Sponsor][sponsor-url].
-
-[![GitHub Sponsor][sponsor-badge]][sponsor-url]
-
----
-
-### Security
-
-If you believe you have found a security vulnerability, we encourage you to **_responsibly disclose this and NOT open a public issue_**. We will investigate all legitimate reports. Email `security@alessiofrittoli.it` to disclose any security vulnerabilities.
 
 ### Made with ☕
 

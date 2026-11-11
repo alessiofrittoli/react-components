@@ -8,7 +8,6 @@ type PortalProps = React.PropsWithChildren<{
 	selector: string
 }>
 
-
 /**
  * Mount a Component in a target DOM node out of standard React layout flow.
  *
@@ -20,17 +19,16 @@ type PortalProps = React.PropsWithChildren<{
  * </Portal>
  * ```
  */
-export const Portal: React.FC<PortalProps> = ( { selector, children } ) => {
+export const Portal: React.FC<PortalProps> = ({ selector, children }) => {
+	const [target, setTarget] = useState<Element>()
 
-	const [ target, setTarget ] = useState<Element>()
-
-	useEffect( () => {
+	useEffect(() => {
 		// update state with target to make sure the component is mounted and we have a portal target.
-		setTarget( document.querySelector( selector ) || undefined )
-	}, [ selector ] )
+		// eslint-disable-next-line react-hooks/set-state-in-effect
+		setTarget(document.querySelector(selector) || undefined)
+	}, [selector])
 
-	if ( ! target ) return children
+	if (!target) return children
 
-	return createPortal( children, target )
-
+	return createPortal(children, target)
 }

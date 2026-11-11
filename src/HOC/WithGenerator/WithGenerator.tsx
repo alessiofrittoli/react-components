@@ -4,18 +4,18 @@ export * from './GeneratorComponent'
 
 /**
  * Transform your generator function into a React.js Component.
- * 
+ *
  * ⚠️ This cannot be a client component neither rendered in a client component due to its async nature.
- * 
+ *
  * @param fn The async generator function.
  * @usage
- * 
+ *
  * ```tsx
  * interface StepProps
  * {
  * 	something: string
  * }
- * 
+ *
  * export const Steps = WithGenerator<StepProps>(
  * 	async function* ( props ) {
  * 		let i = 0
@@ -29,16 +29,8 @@ export * from './GeneratorComponent'
  * )
  * ```
  */
-export const WithGenerator = <
-	T = unknown
->( fn: ( props: T ) => Generator ) => {
-
-	const WithGeneratorComponent: React.FC<T> = (
-		props => (
-			<GeneratorComponent generator={ fn( props ) } />
-		)
-	)
+export const WithGenerator = <T extends unknown = unknown>(fn: (props: T) => Generator): React.FC<T> => {
+	const WithGeneratorComponent: React.FC<T> = props => <GeneratorComponent generator={fn(props)} />
 
 	return WithGeneratorComponent
-	
 }

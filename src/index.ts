@@ -1,2 +1,2 @@
 export * from '@/HOC/Stack'
-export * from '@/HOC/WithGenerator'
+export * from '@/HOC/WithGenerator/WithGenerator'

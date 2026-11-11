@@ -1,25 +1,22 @@
 'use client'
 
-import { useRef } from 'react'
 import { useInView, type UseInViewOptions, type UseInViewReturnType } from '@alessiofrittoli/react-hooks'
 import { childrenFn, type FunctionChildren } from '@alessiofrittoli/react-api'
+import { useRef } from 'react'
 
-
-export interface InViewProps extends UseInViewOptions, Omit<React.ComponentProps<'div'>, 'children'>
-{
+export interface InViewProps extends UseInViewOptions, Omit<React.ComponentProps<'div'>, 'children'> {
 	/**
 	 * Indicates whether to mount/unmount children when in view.
-	 * 
+	 *
 	 * @default true
 	 */
 	mountInView?: boolean
 	/**
 	 * A React.ReactNode or a callable function that returns a React.ReactNode.
-	 * 
+	 *
 	 */
-	children?: FunctionChildren<[ result: UseInViewReturnType ]>
+	children?: FunctionChildren<[result: UseInViewReturnType]>
 }
-
 
 /**
  * A React higher-order component that renders its children based on their visibility within the viewport.
@@ -29,30 +26,44 @@ export interface InViewProps extends UseInViewOptions, Omit<React.ComponentProps
  * @returns A `<div />` that conditionally renders its children based on the in-view state.
  *
  * @example
- * 
+ *
  * ```tsx
  * <InView>
  *   <MyComponent />
  * </InView>
  * ```
  */
-export const InView: React.FC<InViewProps> = ( {
-	mountInView = true, root, margin, amount,
-	once, initial, enable, onIntersect, onEnter, onExit, children, ...props
-} ) => {
-
-	const ref			= useRef<HTMLDivElement>( null )
-	const result		= useInView( ref, { root, margin, amount, once, initial, enable, onIntersect, onEnter, onExit } )
-	const { inView }	= result
+export const InView: React.FC<InViewProps> = ({
+	mountInView = true,
+	root,
+	margin,
+	amount,
+	once,
+	initial,
+	enable,
+	children,
+	onIntersect,
+	onEnter,
+	onExit,
+	...props
+}) => {
+	const ref = useRef<HTMLDivElement>(null)
+	const result = useInView(ref, {
+		root,
+		margin,
+		amount,
+		once,
+		initial,
+		enable,
+		onIntersect,
+		onEnter,
+		onExit,
+	})
+	const { inView } = result
 
 	return (
-		<div ref={ ref } { ...props }>
-			{ mountInView ? (
-				inView ? childrenFn( children, result ) : null
-			) : (
-				childrenFn( children, result )
-			) }
+		<div ref={ref} {...props}>
+			{mountInView ? (inView ? childrenFn(children, result) : null) : childrenFn(children, result)}
 		</div>
 	)
-
 }

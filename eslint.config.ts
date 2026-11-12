@@ -10,15 +10,4 @@ export default eslintConfig(
 	...reactProfile,
 	...fixupConfigRules(compat.extends('plugin:react-server-components/recommended')),
 	...AFReactHooksEslint.recommended,
-	{
-		rules: {
-			'react/prop-types': 'off',
-		},
-	},
-	{
-		files: ['**/*.tsx'],
-		rules: {
-			'@typescript-eslint/no-unnecessary-type-constraint': 'off',
-		},
-	},
 )

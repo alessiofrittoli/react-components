@@ -94,7 +94,7 @@
 	},
 	"devDependencies": {
 		"@alessiofrittoli/node-scripts": "^4.2.0",
-		"@alessiofrittoli/package-configs": "^1.13.0",
+		"@alessiofrittoli/package-configs": "^1.14.0",
 		"@alessiofrittoli/react-api": "^1.3.0",
 		"@alessiofrittoli/react-hooks": "^4.3.0",
 		"@eslint/compat": "^2.1.1",

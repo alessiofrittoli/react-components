@@ -1,0 +1,15 @@
+@custom-variant dark {
+	&:where(.dark, .dark *):not(:where(.light, .light *)) {
+		@slot;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		&:not(:where(.light, .light *)) {
+			@slot;
+		}
+	}
+}
+
+:root {
+	@apply scheme-light dark:scheme-dark;
+}

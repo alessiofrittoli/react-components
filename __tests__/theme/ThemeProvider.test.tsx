@@ -89,3 +89,11 @@ describe('ThemeProvider', () => {
 		expect(screen.getByTestId('theme-status')).toHaveTextContent('false:false')
 	})
 })
+
+describe('useTheme', () => {
+	it('throws an error if called outside the `ThemeProvider` Component', () => {
+		expect(() => render(<ThemeStatus />)).toThrow(
+			'useTheme has been called outside the ThemeProvider Component. Please make sure to wrap your application with the ThemeProvider Component.',
+		)
+	})
+})

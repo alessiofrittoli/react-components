@@ -53,11 +53,13 @@
   - [Contributing](#contributing)
   - [Security](#security)
 - [API Reference](#api-reference)
-  - [High Order Components](#high-order-components)
-    - [`<InView />`](#inview-)
-    - [`<Portal />`](#portal-)
-    - [`<Stack />`](#stack-)
-    - [`WithGenerator`](#withgenerator)
+  - [Components](#components)
+    - [`<ThemeProvider />`](#themeprovider-)
+    - [High Order Components](#high-order-components)
+      - [`<InView />`](#inview-)
+      - [`<Portal />`](#portal-)
+      - [`<Stack />`](#stack-)
+      - [`WithGenerator`](#withgenerator)
 
 ---
 
@@ -158,6 +160,45 @@ If you believe you have found a security vulnerability, we encourage you to **_r
 ### API Reference
 
 #### Components
+
+##### `<ThemeProvider />`
+
+`ThemeProvider` provides the current theme state and theme actions to its descendants through [`useTheme`](./src/theme/useTheme.ts). Wrap your application with it to read the system dark mode preference and let users switch between light and dark mode:
+
+```tsx
+import { ThemeProvider } from '@alessiofrittoli/react-components/theme'
+
+export const App = () => (
+  <ThemeProvider>
+    <YourApp />
+  </ThemeProvider>
+)
+```
+
+Use `useTheme()` inside the provider to access `isDarkMode`, `isDarkOS`, `toggleDarkMode()`, `enableDarkMode()`, and `disableDarkMode()`. The provider applies `dark` or `light` to the document's root element and persists the user's selection.
+
+If your project uses Tailwind CSS, you can improve its `dark:` variant to respond to both the provider's theme class and the operating system preference by importing the package stylesheet after Tailwind in your CSS entry point:
+
+```less
+@use 'tailwindcss';
+@use '@alessiofrittoli/react-components/theme/style';
+```
+
+The stylesheet defines a custom `dark` variant that respects `.dark` and system dark mode, while `.light` explicitly opts out of dark styles.
+
+###### `useTheme()`
+
+Returns the theme context value. It must be called by a component rendered inside `ThemeProvider`.
+
+| Property | Type | Description |
+| --- | --- | --- |
+| `isDarkMode` | `boolean` | Whether dark mode is currently active. |
+| `isDarkOS` | `boolean` | Whether the operating system prefers dark mode. |
+| `toggleDarkMode` | `() => void` | Toggles the active theme. |
+| `enableDarkMode` | `() => void` | Enables dark mode. |
+| `disableDarkMode` | `() => void` | Disables dark mode. |
+
+---
 
 ##### High Order Components
 

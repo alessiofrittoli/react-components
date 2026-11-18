@@ -1,4 +1,5 @@
 allowBuilds:
+  '@alessiofrittoli/type-utils': false
   esbuild: false
 minimumReleaseAgeExclude:
   - '@alessiofrittoli/*'

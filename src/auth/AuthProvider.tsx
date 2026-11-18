@@ -1,8 +1,7 @@
 'use client'
 
 import type { SignInHandler, SessionResponse, SignOutHandler } from './AuthContext'
-import { useDeferCallback } from '@alessiofrittoli/react-hooks'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { AuthContext } from './AuthContext'
 
 const loggerChild = { module: 'AuthProvider' }
@@ -31,6 +30,12 @@ export interface AuthProviderProps<T = unknown> {
 	 */
 	debug?: boolean
 	/**
+	 * Defines maximum access token refresh retries before clearing auth session.
+	 *
+	 * @default 0
+	 */
+	refreshRetries?: number
+	/**
 	 * A custom callback which resolves session data.
 	 *
 	 */
@@ -54,6 +59,7 @@ export interface AuthProviderProps<T = unknown> {
 
 export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> = ({
 	debug = false,
+	refreshRetries = 0,
 	signIn: signInHandler,
 	signOut: signOutHandler,
 	getSession: getSessionHandler,
@@ -65,12 +71,22 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 
 	const timeoutId = useRef<NodeJS.Timeout | undefined>(undefined)
 	const intervalId = useRef<NodeJS.Timeout | undefined>(undefined)
+	const refreshRetriesCount = useRef<number>(0)
+
+	/**
+	 * Sign out.
+	 *
+	 */
+	const signOut = useCallback(async () => {
+		setSession(undefined)
+		await signOutHandler()
+	}, [setSession, signOutHandler])
 
 	/**
 	 * Refresh access token.
 	 *
 	 */
-	const refreshAccessToken = useDeferCallback<RefreshAccessTokenHandler>(async () => {
+	const refreshAccessToken = useCallback<RefreshAccessTokenHandler>(async () => {
 		const result = await refreshAccessTokenHandler()
 
 		setSession(result)
@@ -89,14 +105,28 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 	 * Start refresh interval.
 	 *
 	 */
-	const startRefreshInterval = useDeferCallback(
+	const startRefreshInterval = useCallback(
 		(expDate: Date) => {
 			const expiresMs = expDate.getTime() - Date.now()
 
 			clearInterval(intervalId.current)
 
 			intervalId.current = setInterval(async () => {
-				await refreshAccessToken()
+				try {
+					await refreshAccessToken()
+					refreshRetriesCount.current = 0
+				} catch (error) {
+					refreshRetriesCount.current = refreshRetriesCount.current + 1
+
+					if (refreshRetriesCount.current >= refreshRetries) {
+						clearInterval(intervalId.current)
+						logger.warn({ intervalId: intervalId.current }, 'Max refresh retries reached.')
+						intervalId.current = undefined
+						await signOut()
+					}
+
+					throw error
+				}
 			}, expiresMs)
 
 			if (debug) {
@@ -106,14 +136,14 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 				)
 			}
 		},
-		[debug, refreshAccessToken],
+		[debug, refreshRetries, refreshAccessToken, signOut],
 	)
 
 	/**
 	 * Sign in and start refresh interval.
 	 *
 	 */
-	const signIn = useDeferCallback<SignInHandler>(
+	const signIn = useCallback<SignInHandler>(
 		async (...args) => {
 			const result = await signInHandler(...args)
 
@@ -131,19 +161,10 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 	)
 
 	/**
-	 * Sign out.
-	 *
-	 */
-	const signOut = useDeferCallback(async () => {
-		setSession(undefined)
-		await signOutHandler()
-	}, [setSession, signOutHandler])
-
-	/**
 	 * Fetch session and start refresh interval when access token expires.
 	 *
 	 */
-	const getSession = useDeferCallback(async () => {
+	const getSession = useCallback(async () => {
 		clearTimeout(timeoutId.current)
 
 		const result = await getSessionHandler()
@@ -157,10 +178,12 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 			const expiresMs = expDate.getTime() - Date.now()
 
 			timeoutId.current = setTimeout(async () => {
+				timeoutId.current = undefined
+
 				const { accessJwtExp } = await refreshAccessToken()
 
 				if (accessJwtExp) {
-					await startRefreshInterval(new Date(accessJwtExp))
+					startRefreshInterval(new Date(accessJwtExp))
 				}
 			}, expiresMs)
 
@@ -178,6 +201,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 	 *
 	 */
 	useEffect(() => {
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		getSession()
 			.then(() => {
 				setIsLoading(false)

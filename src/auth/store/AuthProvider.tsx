@@ -8,10 +8,11 @@ import type {
 	SessionResponse,
 	SignOutHandler,
 } from '@/auth/types'
-import { useAuthBroadcastChannel } from '../hooks/useAuthBroadcastChannel'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useAuthBroadcastChannel } from '@/auth/hooks/useAuthBroadcastChannel'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { createLogger } from '@alessiofrittoli/console/logger'
+import { LockManager } from '@alessiofrittoli/web-utils/lock'
 import { AuthContext } from '@/auth/store/AuthContext'
-import { createLogger } from '@/lib/logger'
 
 const logger = createLogger({ module: 'AuthProvider' }, 'error')
 
@@ -65,13 +66,22 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 	onSignOut,
 	children,
 }) => {
-	logger.setLevel(debug ? 'debug' : logger.level)
+	const logLevel = debug ? 'debug' : logger.level
+
+	logger.setLevel(logLevel)
+
+	const refreshLockManager = useMemo(() => new LockManager({ logLevel }), [logLevel])
 
 	const [isLoading, setIsLoading] = useState(true)
+	// FIXME: accept initial data that may be defined by the server
 	const [session, setSession] = useState<SessionResponse | undefined>()
 
 	const timeoutId = useRef<NodeJS.Timeout | undefined>(undefined)
 	const refreshRetriesCount = useRef<number>(0)
+
+	const sessionExp = useRef(session?.accessJwtExp)
+	// eslint-disable-next-line react-hooks/refs
+	sessionExp.current = session?.accessJwtExp
 
 	/**
 	 * Clear any active timer.
@@ -98,8 +108,9 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 	const { broadcastAuthSessionUpdate, broadcastAuthSessionEnd } = useAuthBroadcastChannel<
 		SessionResponse | undefined
 	>({
-		onSessionUpdate: setSession,
-		onSignOut: clearSession,
+		logLevel,
+		onAuthSessionUpdate: setSession,
+		onAuthSessionEnd: clearSession,
 	})
 
 	/**
@@ -142,14 +153,19 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 	}, [updateSession, refreshAccessTokenHandler])
 
 	/**
-	 * Start refresh loop.
+	 * Access token refresh loop.
 	 *
 	 */
-	const startRefreshLoop = useCallback(
+	const refreshLoop = useCallback(
 		(expDate: Date) => {
+			clearTimeout(timeoutId.current)
+
 			const expiresMs = expDate.getTime() - Date.now()
 
-			clearTimeout(timeoutId.current)
+			logger.log(
+				{ nextRefresh: expDate, timeoutId: timeoutId.current },
+				!timeoutId.current ? 'Started refresh access token loop.' : 'Refresh access token loop tick.',
+			)
 
 			timeoutId.current = setTimeout(async () => {
 				try {
@@ -159,7 +175,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 
 					if (accessJwtExp) {
 						// eslint-disable-next-line react-hooks/immutability
-						startRefreshLoop(new Date(accessJwtExp))
+						refreshLoop(new Date(accessJwtExp))
 						return
 					}
 				} catch (error) {
@@ -170,6 +186,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 							{ error, timeoutId: timeoutId.current },
 							'Refresh failed - Max refresh retries reached.',
 						)
+
 						return await signOut()
 					}
 
@@ -177,16 +194,39 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 
 					logger.error({ error, timeoutId: timeoutId.current, nextAttempt }, 'Refresh failed.')
 
-					startRefreshLoop(nextAttempt)
+					refreshLoop(nextAttempt)
 				}
 			}, expiresMs)
-
-			logger.log(
-				{ nextRefresh: expDate, timeoutId: timeoutId.current },
-				'Started refresh access token timeout.',
-			)
 		},
-		[refreshAccessToken, refreshRetries, signOut],
+		[refreshRetries, refreshAccessToken, signOut],
+	)
+
+	/**
+	 * Start refresh loop.
+	 *
+	 */
+	const startRefreshLoop = useCallback(
+		(expDate: Date) => {
+			refreshLockManager
+				.request('access-token-refresh', { releaseOnPageClose: true }, async lock => {
+					logger.log({ lock }, 'Access token refresh lock granted.')
+
+					/**
+					 * Indicates whether `expDate` received as argument is now stale.
+					 *
+					 * This means that `LockManager` granted us lock to token refresh thus an another
+					 * tab that was previously locking the token refresh has been closed.
+					 */
+					const isExpStale = expDate < new Date()
+
+					const expiration =
+						isExpStale && sessionExp.current ? new Date(sessionExp.current) : expDate
+
+					refreshLoop(expiration)
+				})
+				.catch(error => logger.error({ error }, 'Failed to acquire auth refresh lock.'))
+		},
+		[refreshLockManager, refreshLoop],
 	)
 
 	/**
@@ -231,19 +271,20 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 	useEffect(() => {
 		fetchSession()
 			.then(async session => {
-				updateSession(session)
-				setIsLoading(false)
-
 				if (session.accessJwtExp) {
 					startRefreshLoop(new Date(session.accessJwtExp))
 				}
+
+				updateSession(session)
+				setIsLoading(false)
 			})
 			.catch(error => logger.error({ error }, 'Initial get session failed.'))
 
 		return () => {
 			clearTimers()
+			refreshLockManager.release()
 		}
-	}, [updateSession, fetchSession, startRefreshLoop, clearTimers])
+	}, [refreshLockManager, updateSession, fetchSession, startRefreshLoop, clearTimers])
 
 	return (
 		<AuthContext.Provider value={{ session, isLoading, signIn, signOut }}>

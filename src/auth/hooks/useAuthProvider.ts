@@ -1,4 +1,4 @@
-import { AuthContext, type AuthCtx } from './AuthContext'
+import { AuthContext, type AuthCtx } from '../AuthContext'
 import { useContext } from 'react'
 
 export const useAuthProvider = <T>(): AuthCtx<T> => {

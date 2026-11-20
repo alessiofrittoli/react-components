@@ -11,6 +11,9 @@ importers:
       '@alessiofrittoli/date-utils':
         specifier: ^4.3.0
         version: 4.3.0(@alessiofrittoli/math-utils@3.0.1(@alessiofrittoli/typed-map@1.1.0))(@alessiofrittoli/type-utils@2.2.0(@alessiofrittoli/chain-functions@2.8.0)(@alessiofrittoli/node-scripts@4.2.0(@alessiofrittoli/tsconfig@1.1.0(typescript@6.0.3))(@alessiofrittoli/typed-map@1.1.0)))
+      '@alessiofrittoli/event-emitter':
+        specifier: ^1.8.0
+        version: 1.8.0
       '@alessiofrittoli/math-utils':
         specifier: ^3.0.1
         version: 3.0.1(@alessiofrittoli/typed-map@1.1.0)
@@ -129,6 +132,10 @@ packages:
     peerDependencies:
       '@alessiofrittoli/math-utils': ^2.2.0
       '@alessiofrittoli/type-utils': ^2.1.0
+
+  '@alessiofrittoli/event-emitter@1.8.0':
+    resolution: {integrity: sha512-oHgwjnT7qHWtOWdy0C10zoAGslZzisqCISDf5RJpqoUgBTJGyyfTtKeYYGrO8t2y3YBtr+27aGQwi4h7DVKRZw==}
+    engines: {node: '>=24.15.0', pnpm: '>=11.27.1'}
 
   '@alessiofrittoli/math-utils@3.0.1':
     resolution: {integrity: sha512-8yvTFH1xXYtLuceEattpyoYu0cG7zb4j0IuJpOuy6MY7sQqgoHlsX2RTYoeZemShf2abFEU99TBBqo3JDQgjcg==}
@@ -2747,6 +2754,8 @@ snapshots:
     dependencies:
       '@alessiofrittoli/math-utils': 3.0.1(@alessiofrittoli/typed-map@1.1.0)
       '@alessiofrittoli/type-utils': 2.2.0(@alessiofrittoli/chain-functions@2.8.0)(@alessiofrittoli/node-scripts@4.2.0(@alessiofrittoli/tsconfig@1.1.0(typescript@6.0.3))(@alessiofrittoli/typed-map@1.1.0))
+
+  '@alessiofrittoli/event-emitter@1.8.0': {}
 
   '@alessiofrittoli/math-utils@3.0.1(@alessiofrittoli/typed-map@1.1.0)':
     optionalDependencies:

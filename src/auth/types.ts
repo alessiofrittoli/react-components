@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { createContext } from 'react'
-
 export type SessionResponse<T = unknown> = T & {
 	/**
 	 * The access token expiration date.
@@ -10,6 +7,7 @@ export type SessionResponse<T = unknown> = T & {
 	accessJwtExp?: string | number | Date
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SignInHandler<T = unknown> = <U extends any[]>(
 	...args: U
 ) => SessionResponse<T> | Promise<SessionResponse<T>>
@@ -39,6 +37,10 @@ export interface AuthCtx<T> {
 	signOut: SignOutHandler
 }
 
-export const AuthContext = createContext<AuthCtx<unknown> | undefined>(undefined)
+export type AnonymousSignInHandler<T = unknown> = (
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	...args: any[]
+) => SessionResponse<T> | Promise<SessionResponse<T>>
 
-AuthContext.displayName = 'AuthContext'
+export type GetSessionHandler<T = unknown> = () => SessionResponse<T> | Promise<SessionResponse<T>>
+export type RefreshAccessTokenHandler<T = unknown> = () => SessionResponse<T> | Promise<SessionResponse<T>>

@@ -1,10 +1,16 @@
 'use client'
 
-import type { AnonymousSignInHandler, GetSessionHandler, RefreshAccessTokenHandler } from './types'
-import type { SignInHandler, SessionResponse, SignOutHandler } from './AuthContext'
-import { useAuthBroadcastChannel } from './hooks/useAuthBroadcastChannel'
+import type {
+	AnonymousSignInHandler,
+	GetSessionHandler,
+	RefreshAccessTokenHandler,
+	SignInHandler,
+	SessionResponse,
+	SignOutHandler,
+} from '@/auth/types'
+import { useAuthBroadcastChannel } from '../hooks/useAuthBroadcastChannel'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AuthContext } from './AuthContext'
+import { AuthContext } from '@/auth/store/AuthContext'
 import { createLogger } from '@/lib/logger'
 
 const logger = createLogger({ module: 'AuthProvider' }, 'error')
@@ -42,6 +48,10 @@ export interface AuthProviderProps<T = unknown> {
 	 *
 	 */
 	refreshAccessToken: RefreshAccessTokenHandler<T>
+	/**
+	 * A custom callback executed on sign-out.
+	 *
+	 */
 	onSignOut?: () => void
 }
 
@@ -78,6 +88,10 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 		intervalId.current = undefined
 	}, [])
 
+	/**
+	 * Clear session state, timers and call external `onSignOut` callback.
+	 *
+	 */
 	const clearSession = useCallback(() => {
 		setSession(undefined)
 		clearTimers()
@@ -91,6 +105,10 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 		onSignOut: clearSession,
 	})
 
+	/**
+	 * Update session state and broadcast session update through `BroadcastChannel`.
+	 *
+	 */
 	const updateSession = useCallback(
 		(session?: SessionResponse) => {
 			setSession(session)
@@ -175,6 +193,8 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 		async (...args) => {
 			const session = await signInHandler(...args)
 
+			logger.log({ session }, 'Sign-in successful.')
+
 			updateSession(session)
 
 			const { accessJwtExp } = session
@@ -182,8 +202,6 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 			if (accessJwtExp) {
 				startRefreshInterval(new Date(accessJwtExp))
 			}
-
-			logger.log({ session }, 'Sign-in successful.')
 
 			return session
 		},

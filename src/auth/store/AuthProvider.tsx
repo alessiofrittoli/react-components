@@ -71,7 +71,6 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 	const [session, setSession] = useState<SessionResponse | undefined>()
 
 	const timeoutId = useRef<NodeJS.Timeout | undefined>(undefined)
-	const intervalId = useRef<NodeJS.Timeout | undefined>(undefined)
 	const refreshRetriesCount = useRef<number>(0)
 
 	/**
@@ -80,12 +79,10 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 	 */
 	const clearTimers = useCallback(() => {
 		clearTimeout(timeoutId.current)
-		clearInterval(intervalId.current)
 
-		logger.log({ timeoutId: timeoutId.current, intervalId: intervalId.current }, 'Timers cleared.')
+		logger.log({ timeoutId: timeoutId.current }, 'Timers cleared.')
 
 		timeoutId.current = undefined
-		intervalId.current = undefined
 	}, [])
 
 	/**
@@ -139,50 +136,57 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 
 		updateSession(result)
 
-		logger.log(
-			{ timeoutId: timeoutId.current, intervalId: intervalId.current },
-			'Access token refreshed.',
-		)
+		logger.log({ timeoutId: timeoutId.current }, 'Access token refreshed.')
 
 		return result
 	}, [updateSession, refreshAccessTokenHandler])
 
 	/**
-	 * Start refresh interval.
+	 * Start refresh loop.
 	 *
 	 */
-	const startRefreshInterval = useCallback(
+	const startRefreshLoop = useCallback(
 		(expDate: Date) => {
 			const expiresMs = expDate.getTime() - Date.now()
 
-			clearInterval(intervalId.current)
+			clearTimeout(timeoutId.current)
 
-			/**
-			 * Start refresh interval with retries.
-			 *
-			 */
-			intervalId.current = setInterval(async () => {
+			timeoutId.current = setTimeout(async () => {
 				try {
-					await refreshAccessToken()
+					const { accessJwtExp } = await refreshAccessToken()
+
 					refreshRetriesCount.current = 0
+
+					if (accessJwtExp) {
+						// eslint-disable-next-line react-hooks/immutability
+						startRefreshLoop(new Date(accessJwtExp))
+						return
+					}
 				} catch (error) {
 					refreshRetriesCount.current = refreshRetriesCount.current + 1
 
 					if (refreshRetriesCount.current >= refreshRetries) {
-						logger.warn({ intervalId: intervalId.current }, 'Max refresh retries reached.')
-						await signOut()
+						logger.error(
+							{ error, timeoutId: timeoutId.current },
+							'Refresh failed - Max refresh retries reached.',
+						)
+						return await signOut()
 					}
 
-					throw error
+					const nextAttempt = new Date(Date.now() + 1 * 60 * 1000)
+
+					logger.error({ error, timeoutId: timeoutId.current, nextAttempt }, 'Refresh failed.')
+
+					startRefreshLoop(nextAttempt)
 				}
 			}, expiresMs)
 
 			logger.log(
-				{ nextRefresh: expDate, intervalId: intervalId.current },
-				'Started refresh access token interval.',
+				{ nextRefresh: expDate, timeoutId: timeoutId.current },
+				'Started refresh access token timeout.',
 			)
 		},
-		[refreshRetries, refreshAccessToken, signOut],
+		[refreshAccessToken, refreshRetries, signOut],
 	)
 
 	/**
@@ -200,40 +204,12 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 			const { accessJwtExp } = session
 
 			if (accessJwtExp) {
-				startRefreshInterval(new Date(accessJwtExp))
+				startRefreshLoop(new Date(accessJwtExp))
 			}
 
 			return session
 		},
-		[signInHandler, updateSession, startRefreshInterval],
-	)
-
-	/**
-	 * Start timeout then refresh interval.
-	 *
-	 */
-	const startRefreshIntervalOnTimeout = useCallback(
-		(expDate: Date) => {
-			const expiresMs = expDate.getTime() - Date.now()
-
-			clearTimeout(timeoutId.current)
-
-			timeoutId.current = setTimeout(async () => {
-				timeoutId.current = undefined
-
-				const { accessJwtExp } = await refreshAccessToken()
-
-				if (accessJwtExp) {
-					startRefreshInterval(new Date(accessJwtExp))
-				}
-			}, expiresMs)
-
-			logger.log(
-				{ nextRefresh: expDate, timeoutId: timeoutId.current },
-				'Started refresh access token timeout.',
-			)
-		},
-		[refreshAccessToken, startRefreshInterval],
+		[signInHandler, updateSession, startRefreshLoop],
 	)
 
 	/**
@@ -259,7 +235,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 				setIsLoading(false)
 
 				if (session.accessJwtExp) {
-					startRefreshIntervalOnTimeout(new Date(session.accessJwtExp))
+					startRefreshLoop(new Date(session.accessJwtExp))
 				}
 			})
 			.catch(error => logger.error({ error }, 'Initial get session failed.'))
@@ -267,7 +243,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 		return () => {
 			clearTimers()
 		}
-	}, [updateSession, fetchSession, startRefreshIntervalOnTimeout, clearTimers])
+	}, [updateSession, fetchSession, startRefreshLoop, clearTimers])
 
 	return (
 		<AuthContext.Provider value={{ session, isLoading, signIn, signOut }}>

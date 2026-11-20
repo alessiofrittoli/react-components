@@ -5,7 +5,7 @@ import type {
 	GetSessionHandler,
 	RefreshAccessTokenHandler,
 	SignInHandler,
-	SessionResponse,
+	AuthSessionData,
 	SignOutHandler,
 } from '@/auth/types'
 import { useAuthBroadcastChannel } from '@/auth/hooks/useAuthBroadcastChannel'
@@ -29,6 +29,12 @@ export interface AuthProviderProps<T = unknown> {
 	 * @default 0
 	 */
 	refreshRetries?: number
+	/**
+	 * Initial session data.
+	 *
+	 * This could be defined by the server and will prevent session data fetch on component mount.
+	 */
+	session?: AuthSessionData<T>
 	/**
 	 * A custom callback which resolves session data.
 	 *
@@ -59,6 +65,7 @@ export interface AuthProviderProps<T = unknown> {
 export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> = ({
 	debug = false,
 	refreshRetries = 0,
+	session: initialSession,
 	signIn: signInHandler,
 	signOut: signOutHandler,
 	getSession: getSessionHandler,
@@ -73,8 +80,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 	const refreshLockManager = useMemo(() => new LockManager({ logLevel }), [logLevel])
 
 	const [isLoading, setIsLoading] = useState(true)
-	// FIXME: accept initial data that may be defined by the server
-	const [session, setSession] = useState<SessionResponse | undefined>()
+	const [session, setSession] = useState<AuthSessionData | undefined>(initialSession)
 
 	const timeoutId = useRef<NodeJS.Timeout | undefined>(undefined)
 	const refreshRetriesCount = useRef<number>(0)
@@ -106,7 +112,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 	}, [clearTimers, onSignOut])
 
 	const { broadcastAuthSessionUpdate, broadcastAuthSessionEnd } = useAuthBroadcastChannel<
-		SessionResponse | undefined
+		AuthSessionData | undefined
 	>({
 		logLevel,
 		onAuthSessionUpdate: setSession,
@@ -118,7 +124,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 	 *
 	 */
 	const updateSession = useCallback(
-		(session?: SessionResponse) => {
+		(session?: AuthSessionData) => {
 			setSession(session)
 			broadcastAuthSessionUpdate(session)
 		},
@@ -269,7 +275,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 	 *
 	 */
 	useEffect(() => {
-		fetchSession()
+		;(initialSession ? Promise.resolve(initialSession) : fetchSession())
 			.then(async session => {
 				if (session.accessJwtExp) {
 					startRefreshLoop(new Date(session.accessJwtExp))
@@ -284,7 +290,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<AuthProviderProps>> 
 			clearTimers()
 			refreshLockManager.release()
 		}
-	}, [refreshLockManager, updateSession, fetchSession, startRefreshLoop, clearTimers])
+	}, [initialSession, refreshLockManager, updateSession, fetchSession, startRefreshLoop, clearTimers])
 
 	return (
 		<AuthContext.Provider value={{ session, isLoading, signIn, signOut }}>
